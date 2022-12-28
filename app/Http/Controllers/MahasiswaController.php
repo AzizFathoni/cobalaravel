@@ -12,14 +12,25 @@ class MahasiswaController extends Controller
 { 
     public function index(Request $request) 
     {
-        if($request->has('cari')){
-            $data_mahasiswa = Mahasiswa::where('nama', 'LIKE', '%'. $request->cari . '%')->get();
-        }else
-        $data_mahasiswa = Mahasiswa::all(); 
-        $data_mahasiswa = DB::table('mahasiswa')->paginate(5);
+        $mahasiswa = DB::table('mahasiswa')->paginate(5);
 
-    return view('mahasiswa.index',['data_mahasiswa' => $data_mahasiswa]);
+        //mengirim data mahasiswa ke view index
+        return view('mahasiswa.index', ['mahasiswa' => $mahasiswa]);
     } 
+
+    public function cari (Request $request)
+    {
+        // menangkap data pencarian
+        $cari = $request->cari;
+
+            // mengambil data dari table pegawai sesuai pencarian data
+        $mahasiswa = DB::table('mahasiswa')
+        ->where('nama','like', "%".$cari."%")
+        ->paginate();
+
+            //mengirim data pegawai ke view index
+        return view('mahasiswa.index', ['mahasiswa' => $mahasiswa]);
+    }
      
     public function create(Request $request) 
     { 

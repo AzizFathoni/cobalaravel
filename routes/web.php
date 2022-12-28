@@ -25,6 +25,9 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/mahasiswa', [App\Http\Controllers\MahasiswaController::class, 'index'])->name('mahasiswa');
+Route::get('/mahasiswa/cari', [MahasiswaController::class, 'cari']);
+Route::get('/pegawai/cari', [PegawaiController::class, 'cari']);
+
 Route::post('/mahasiswa', [MahasiswaController::class, 'create'])->name('add.mhs');
 Route::get('/mahasiswa/{id}/edit', [MahasiswaController::class, 'edit']);
 Route::post('/mahasiswa/{id}/update', [MahasiswaController::class, 'update']);

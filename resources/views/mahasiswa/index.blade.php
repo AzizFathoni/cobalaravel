@@ -2,145 +2,164 @@
 <html>
 
 <head>
+    <title>{{ config('app.name', 'Laravel') }}</title>
+    <!-- Fonts -->
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
-    <title>PRAKTIKUM LARAVEL CRUD</title>
+    <!-- Styles -->
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
-    
-    <!-- Scripts -->
-   
- 
-    <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-        <div class="container">
-            <a class="navbar-brand" href="{{ url('/') }}">
-                {{ config('app.name', 'Laravel') }}
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="{{ __('Toggle navigation') }}">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+    {{-- NAVBAR --}}
+    <div id="app">
+        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+            <div class="container">
+                <a class="navbar-brand" href="{{ url('/') }}">
+                    {{ config('app.name', 'Laravel') }}
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <!-- Left Side Of Navbar -->
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link " aria-current="page" href="/home">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/mahasiswa">Mahasiswa</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/pegawai">Pegawai</a>
-                    </li>
-                </ul>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <!-- Left Side Of Navbar -->
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link {{ Request::routeIs('home') ? 'active' : '' }}" href="/home">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ Request::routeIs('mahasiswa') ? 'active' : '' }}"
+                                href="/mahasiswa">Mahasiswa</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ Request::routeIs('pegawai') ? 'active' : '' }}"
+                                href="/pegawai">Pegawai</a>
+                        </li>
+                    </ul>
 
-                <!-- Right Side Of Navbar -->
-                <ul class="navbar-nav ms-auto">
-                    <!-- Authentication Links -->
-                    @guest
-                        @if (Route::has('login'))
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                            </li>
-                        @endif
+                    <!-- Right Side Of Navbar -->
+                    <ul class="navbar-nav ms-auto">
+                        <!-- Authentication Links -->
+                        @guest
+                            @if (Route::has('login'))
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                </li>
+                            @endif
 
-                        @if (Route::has('register'))
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                            </li>
-                        @endif
-                    @else
-                        <li class="nav-item dropdown">
-                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
-                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                {{ Auth::user()->name }}
-                            </a>
-
-                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{{ route('logout') }}"
-                                    onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                    {{ __('Logout') }}
+                            @if (Route::has('register'))
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                </li>
+                            @endif
+                        @else
+                            <li class="nav-item dropdown">
+                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
+                                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                    {{ Auth::user()->name }}
                                 </a>
 
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                    @csrf
-                                </form>
-                            </div>
-                        </li>
-                    @endguest
-                </ul>
+                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="{{ route('logout') }}"
+                                        onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                        {{ __('Logout') }}
+                                    </a>
+
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                        @csrf
+                                    </form>
+                                </div>
+                            </li>
+                        @endguest
+                    </ul>
+                </div>
             </div>
-        </div>
-    </nav>
+        </nav>
+    </div>
 </head>
 
 <body>
-    <div class="container mt-3">
-        @if (session('Sukses'))
+    <div class="container">
+        @if (session('sukses'))
             <div class="alert alert-success" role="alert">
-                {{ session('Sukses') }}
+                {{ session('sukses') }}
             </div>
         @endif
-        <center><h1 class="pt-3">Data Mahasiswa</h1></center>
+        <center>
+            <h1 class="pt-3">Data Mahasiswa</h1>
+        </center>
         <div class="row">
-            <div class="col-4 my-3">
-                <a href="/mahasiswa/exportpdf" class="btn btn-sm btn-succes">Export PDF</a>
+            <div class="col-4 my-4">
+                <a href="/mahasiswa/exportpdf" class="btn btn-sm btn-success">Export PDF</a>
             </div>
 
             {{-- form search data --}}
-            <div class="col-5 my-4">
-                <form class="d-flex" role="search">
-                    <input name="cari" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-succes" type="submit">Search</button>
+            <div class="col-4 my-4">
+                @csrf
+                <form class="d-flex" action="/mahasiswa/cari" method="GET">
+                    <input class="form-control me-2" type="text" name="cari" 
+                    placeholder="Cari data mahasiswa .." value="{{ old('cari') }}">
+                    <button class="btn btn-outline-success" type="submit">Cari</button>
                 </form>
             </div>
 
-            <div class="col-3 my-4" align="right">
-                <!-- Button trigger modal -->
+            <!-- Button trigger modal -->
+            <div class="col-4 my-4" align="right">
                 <button type="button" class="btn btn-primary btn-sm float-right" data-toggle="modal"
                     data-target="#exampleModal">
                     Tambah Data
                 </button>
-
-            </div>
-
-            <div class="table-responsive">
-                <table class="table table table-hover">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th>NAMA</th>
-                            <th>NIM</th>
-                            <th>ALAMAT</th>
-                            <th>AKSI</th>
-                        </tr>
-                    </thead>
-                    @foreach ($data_mahasiswa as $mahasiswa)
-                        <tbody>
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $mahasiswa->nama }}</td>
-                                <td>{{ $mahasiswa->nim }}</td>
-                                <td>{{ $mahasiswa->alamat }}</td>
-                                <td><a href="/mahasiswa/{{$mahasiswa->id}}/edit" class = "btn-warning btn-sm">Edit</a>
-                                <a href="/mahasiswa/delete/{{$mahasiswa->id}}" class = "btn-danger btn-sm" onclick="return confirm('Yakin Mau dihapus')">Delete</a></td>
-                            </tr>
-                        </tbody>
-                    @endforeach
-                </table>
-                </div>
-                     {{-- perhatikan script di bawah ini untuk membuat paginasi dan yang berkaitan dengan paginasi --}}
-                        Current Page: {{ $data_mahasiswa->currentPage() }}<br>
-                        Jumlah Data: {{ $data_mahasiswa->total() }}<br>
-                        Data perhalaman: {{ $data_mahasiswa->perPage() }}<br>
-                        <br>
-                     {{ $data_mahasiswa->links() }}
-                </div>
             </div>
         </div>
+
+
+        {{-- pemberitahuan jika data tidak ditemukan --}}
+        @if ($mahasiswa->count() > 0)
+        @else
+            <center>
+                <font color="red">
+                    <h3>!! Tidak ditemukan data yang sesuai dengan kata kunci !!</h3>
+                </font>
+            </center>
+        @endif
+        
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th>NAMA</th>
+                    <th>NIM</th>
+                    <th>ALAMAT</th>
+                    <th>AKSI</th>
+                </tr>
+            </thead>
+            @foreach ($mahasiswa as $mhs)
+                <tbody>
+                    <tr>
+                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ $mhs->nama }}</td>
+                        <td>{{ $mhs->nim }}</td>
+                        <td>{{ $mhs->alamat }}</td>
+                        <td><a href="/mahasiswa/{{ $mhs->id }}/edit" class="btn btn-warning btn-sm">Edit</a>
+                            <a href="/mahasiswa/delete/{{ $mhs->id }}" class="btn btn-danger btn-sm"
+                                onclick="return confirm('Yakin mau hapus data?')">Delete</a>
+                        </td>
+                    </tr>
+                </tbody>
+            @endforeach
+        </table>
+        <div>
+            Current Page: {{ $mahasiswa->currentPage() }}<br>
+            Jumlah Data: {{ $mahasiswa->total() }}<br>
+            Data perhalaman: {{ $mahasiswa->perPage() }}<br>
+            <br>
+            {{ $mahasiswa->links() }}
+        </div>
     </div>
+
 
 
     <!-- Modal -->
@@ -154,7 +173,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('add.mhs') }}" method="POST">
+                    <form action="/mahasiswa/create" method="POST">
                         {{ csrf_field() }}
                         <div class="form-group">
                             <label for="exampleInputEmail1">Nama</label>
@@ -176,7 +195,7 @@
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
-                </div> 
+                </div>
             </div>
         </div>
     </div>
@@ -190,7 +209,6 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
         integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous">
     </script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 </body>
 
 </html>
